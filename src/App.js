@@ -1,24 +1,53 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+
+import NewTodoForm from './components/NewTodoForm/NewTodoForm'
+import TodoList from './components/TodoList/TodoList'
+
+const removeTodo = (state, id) => {
+  return { ...state, todos: state.todos.filter(x => x.id !== id) }
+}
+
+const addTodo = (state, newTodo) => {
+  const nextId = state.todos.length + 1;
+  const todo = { id: nextId, title: newTodo, createdAt: new Date() }
+
+  return {...state, todos: state.todos.concat([todo]) }
+}
+
+const markTodoAsDone = (state, id) => {
+  const markDoneById = (todo) => {
+    if (todo.id === id) {
+      return { ...todo, done: true }
+    }
+
+    return todo
+  }
+
+
+  return {...state, todos: state.todos.map(markDoneById) }
+}
 
 function App() {
+  const [appState, setAppState] = useState({
+    todos: []
+  })
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <NewTodoForm
+        onSubmitForm={({ newTodo }) => 
+          setAppState(addTodo(appState, newTodo)) 
+        } 
+      />
+      <TodoList 
+        todos={appState.todos} 
+        onCompleted={(id) => 
+          setAppState(markTodoAsDone(appState, id))
+        }
+        onRemoved={(id) => 
+          setAppState(removeTodo(appState, id))
+        }
+      />
     </div>
   );
 }
