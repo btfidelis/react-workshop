@@ -1,24 +1,14 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
-function App() {
+function App (props) {
+  const [ msg, updateMsg ] = useState('')
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>{msg}</h1>
+      <input type="text" onChange={ e => updateMsg(e.target.value)  } />
+      <button onClick={() => alert(msg)}>Send</button>
     </div>
   );
 }
